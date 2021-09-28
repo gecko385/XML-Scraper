@@ -167,6 +167,7 @@ The DOM context is now each successive cast member on the movie definiiton being
 
 As above attibute values are extracted and stored on the cast array on movie.
 
+```
         _info :             '@imdb-info:findnodes:./imdb-info'
         imdb-info :
             url :           'getAttribute:url'
@@ -177,11 +178,11 @@ As above attibute values are extracted and stored on the cast array on movie.
 The YAML is much more concise than writing the native Perl to do the extraction, roughly 1:3 ration spec to code.
 XML::Scraper takes that specification and actually builds the boiler plate that would otherwise be lovingly hand crafted. 
 
-## Generateed Code
+## Generated Code
 
 Here is the code it produces for the above spec:
 
-```Perl
+```
 sub {
       package XML::Scraper;
       use warnings;
