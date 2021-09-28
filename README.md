@@ -341,14 +341,13 @@ Datat::Dumper::Concise format.
 
 XML::Scraper has two public methods
 
-```
 ## XML::Scraper::parseDOM
  Expects arguments:
 
     - DOM object of type XML::LibXML::Document
     - reference to YAML config 
 
-```
+
 Example of use:
 ```
 use XML::LibXML qw(:libxml);
@@ -363,10 +362,10 @@ my $dom = XML::LibXML->load_xml(location => $xml_file );
 my $scraper = XML::Scraper->new;
 my %results;
 $results{playlist} = $scraper->parseDOM($dom,$config); 
-
+```
 ##  XML::Scraper::getCode
 
-It pretty prints the subroutine generated for the given config. It takes a ingle argument:
+It pretty prints the subroutine generated for the given config. It takes a single argument:
 
     - reference to YAML config 
 
@@ -389,5 +388,20 @@ building the code.
 # Examples
 
 Best example is given in the tests.tar.gz tarball. The testScraper.pl provides a full worked example
-withe the playlist XML and YAML described above.
+with the playlist XML and YAML described above. 
 
+It is used to parse the XML twice, once with the movies written to Perl as an array, once as a hash
+keyed on the 'id' field.
+
+Contents:
+
+```
+tests :
+    cfg/playlist.yml            The YAML config file containing the extract specs.
+    expected/playlist.pl        Model text for the Perl data extract from XML.
+    logs/                       timestamped log files for every test run
+    Makefile                    Runs the test script via 'make' pr 'make all'
+    testScraper.pl              Tge Perl test script itself
+    tgt/                        Where the output perl 'playlist.pl' is stored
+    xml/playlist.xml            The XML source data
+```
