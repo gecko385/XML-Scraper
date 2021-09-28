@@ -5,9 +5,20 @@ Perl module for scraping data out of XML via LibXML/XPath, driven by a YAML styl
 
 Version 1.0.1
 
+# DEPENDENCIES
+
+```perl
+    use XML::LibXML qw(:libxml);
+    use Data::Dumper::Concise qw(Dumper);
+    use Digest::MD5 qw(md5_hex);
+    use YAML;
+    use File::Slurp; # test progam only . not the XML::Scraper package itself
+```
+
 # SYNOPSIS
 
-```use XML::LibXML qw(:libxml);
+```
+use XML::LibXML qw(:libxml);
 use XML::Scraper;
 
 use Data::Dumper::Concise;
