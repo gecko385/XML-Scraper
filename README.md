@@ -377,17 +377,17 @@ print $scraper->getCode($config);
 
 # Under the Hood
 
-The parseDOM method looks to see if it has already parsed the config before and created a subroutine.
+The `parseDOM` method looks to see if it has already parsed the config before and created a subroutine.
 A unique key is generated from MD5 checksum of the config text. So once generated it can be reused many 
 times, say iterating over a bunch of XML files populated via the same schema.
 
-Control is passed to _createParserwhich creates the bare bones of the new subroutine and then passes
-control to _createNode which does most of the wor, recursively descending through the config tree 
+Control is passed to `_createParse` which creates the bare bones of the new subroutine and then passes
+control to `_createNode` which does most of the work, recursively descending through the config tree 
 building the code.
 
-# Examples
+# Example
 
-Best example is given in the tests.tar.gz tarball. The testScraper.pl provides a full worked example
+See the `tests.tar.gz` tarball. `testScraper.pl` provides a full worked example
 with the playlist XML and YAML described above. 
 
 It is used to parse the XML twice, once with the movies written to Perl as an array, once as a hash
@@ -401,7 +401,7 @@ tests :
     expected/playlist.pl        Model text for the Perl data extract from XML.
     logs/                       timestamped log files for every test run
     Makefile                    Runs the test script via 'make' pr 'make all'
-    testScraper.pl              Tge Perl test script itself
+    testScraper.pl              The Perl test script itself
     tgt/                        Where the output perl 'playlist.pl' is stored
     xml/playlist.xml            The XML source data
 ```
