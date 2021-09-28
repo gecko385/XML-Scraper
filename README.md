@@ -125,6 +125,15 @@ code generated is this:
       my(@movieDefs) = $dom->findnodes('//movie');
       my @movies;
       foreach my $movieDef (@movieDefs) {
+            [ parse attibutes and children ]
+            push @movies, \%movie;
+      }
+      my %movies;
+      foreach my $ref (@movies) {
+          $movies{$ref->{'id'}} = $ref;
+      }
+      $playlist{'movie'} = \%movies;
+
 ```
 `    movie :`
 
@@ -159,28 +168,28 @@ Find all the genre items, store in Perl as a list of strings. The code generated
  
  `       cast :`
 
-The DOM context is now each successive cast member on the movie definiiton being parsed:
+This time we capture cast details as an _array_ of hash refs, rather than a _keyed hash_ as above for movies. The generated code is:
 
-`            name :          'getAttribute:name'`
-
-`           role :          'getAttribute:role'`
-
-As above attibute values are extracted and stored on the cast array on movie.
-
+ ```Perl
+          my(@castDefs) = $movieDef->findnodes('./cast/person');
+          my @casts;
+          foreach my $castDef (@castDefs) {
+              my %cast;
+              $cast{'role'} = $castDef->getAttribute('role');
+              $cast{'name'} = $castDef->getAttribute('name');
+              push @casts, \%cast;
+          }
+          $movie{'cast'} = \@casts;
 ```
-        _info :             '@imdb-info:findnodes:./imdb-info'
-        imdb-info :
-            url :           'getAttribute:url'
-            synopsis :      'findvalue:./synopsis'
-            score :         'findvalue:./score'
-```
+
+The remainder of the YAML is as explained above.
 
 The YAML is much more concise than writing the native Perl to do the extraction, roughly 1:3 ration spec to code.
 XML::Scraper takes that specification and actually builds the boiler plate that would otherwise be lovingly hand crafted. 
 
 ## Generated Code
 
-Here is the code it produces for the above spec:
+Here is the full code it produces for the above spec:
 
 ```
 sub {
@@ -231,7 +240,8 @@ sub {
   },
 ```
 It may not be the slickest Perl, but it gets the job done. You never really need to see the Perl, 
-unless the parse is not quite getting the data how you want it. 
+unless the parse is not quite getting the data how you want it. A public method `getCode` allows you 
+to extract the code for debugging.
 
 ## Perl Output
 
