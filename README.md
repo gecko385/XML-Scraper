@@ -1,5 +1,5 @@
 # XML-Scraper
-Perl module for scraping data out of XML via LibXML/XPath  driven by a YAML style configuration
+Perl module for scraping data out of XML via LibXML/XPath, driven by a YAML style configuration.
 
 # VERSION
 
@@ -7,7 +7,7 @@ Version 1.0.1
 
 # SYNOPSIS
 
-use XML::LibXML qw(:libxml);
+```use XML::LibXML qw(:libxml);
 use XML::Scraper;
 
 use Data::Dumper::Concise;
@@ -17,7 +17,9 @@ use YAML;
 my $config = YAML::LoadFile $config_file;
 my $dom = XML::LibXML->load_xml(location => $xml_file );
 my $scraper = XML::Scraper->new;
+my %results;
 $results{playlist} = $scraper->parseDOM($dom,$config->{playlist}); 
+```
 
 # DESCRIPTION
 
@@ -335,3 +337,57 @@ Datat::Dumper::Concise format.
     ],
   },
 ```
+# Public Interface
+
+XML::Scraper has two public methods
+
+```
+## XML::Scraper::parseDOM
+ Expects arguments:
+
+    - DOM object of type XML::LibXML::Document
+    - reference to YAML config 
+
+```
+Example of use:
+```
+use XML::LibXML qw(:libxml);
+use XML::Scraper;
+
+use Data::Dumper::Concise;
+use File::Slurp;
+use YAML;
+
+my $config = YAML::LoadFile $config_file;
+my $dom = XML::LibXML->load_xml(location => $xml_file );
+my $scraper = XML::Scraper->new;
+my %results;
+$results{playlist} = $scraper->parseDOM($dom,$config); 
+
+##  XML::Scraper::getCode
+
+It pretty prints the subroutine generated for the given config. It takes a ingle argument:
+
+    - reference to YAML config 
+
+Example:
+...
+```
+print $scraper->getCode($config);
+```
+
+# Under the Hood
+
+The parseDOM method looks to see if it has already parsed the config before and created a subroutine.
+A unique key is generated from MD5 checksum of the config text. So once generated it can be reused many 
+times, say iterating over a bunch of XML files populated via the same schema.
+
+Control is passed to _createParserwhich creates the bare bones of the new subroutine and then passes
+control to _createNode which does most of the wor, recursively descending through the config tree 
+building the code.
+
+# Examples
+
+Best example is given in the tests.tar.gz tarball. The testScraper.pl provides a full worked example
+withe the playlist XML and YAML described above.
+
