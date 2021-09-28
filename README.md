@@ -491,3 +491,6 @@ tests :
     tgt/                        Where the output perl 'playlist.pl' is stored
     xml/playlist.xml            The XML source data
 ```
+# LICENSE
+
+GGPL as described in the file LICENSE in this code repository/release/package.
