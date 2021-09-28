@@ -40,6 +40,8 @@ Speaking of simple examples, borrowing from Grant McLean's great LibXML
 Grant has concocted an IMDB based playlist in XML, this will be used here to describe how to use
 XML::Scraper. Here is the YAML to grab all that XML into Perl:
 
+## YAML
+
 ```YAML
 playlist :
     _films   :              '%movie:id:findnodes://movie'
@@ -61,6 +63,9 @@ playlist :
             synopsis :      'findvalue:./synopsis'
             score :         'findvalue:./score'
 ```
+
+## XML
+
 Some XML for reference:
 
 ```XML
@@ -93,9 +98,76 @@ Some XML for reference:
  
 </playlist>
 ```
+## Breaking down the YAML:
+
+`playlist :`
+
+The top level root object in the spec.
+
+`   _films   :              '%movie:id:findnodes://movie'`
+
+The leading underscore indicates a query field rather than part of the output Perl.
+It breaks down as: 1/ Use `$dom->findnodes("//movie");` to find all the movie objects in the XML. 
+2/ Store them on the Perl 'movie' element of playlist, as hash references keyed by 'id'. The
+code generated is this:
+```Perl
+      my(@movieDefs) = $dom->findnodes('//movie');
+      my @movies;
+      foreach my $movieDef (@movieDefs) {
+```
+`    movie :`
+
+For each movie instance process the following sub elements, with each successive movie
+item as DOM context: 
+
+`        id :              'getAttribute:id'`
+
+Fetch attribute 'id', store on the Perl movie definition
+
+`        title :             'findvalue:./title'`
+
+`        director :          'findvalue:./director'`
+
+`        release-date :      'findvalue:./release-date'`
+
+`        mpaa-rating :       'findvalue:./mpaa-rating'`
+
+`        running-time :      'findvalue:./running-time'`
+
+For all the above fetch via findValue , store in Perl movie hash
+
+`        genre:              'to_literal_list:./genre'`
+
+Find all the genre items, store in Perl as a list of strings. The code generated does this:
+
+```$movie{'genre'} = $movieDef->findnodes('./genre')->to_literal_list;```
+ 
+ Now we descend further to acquire cast data:
+ 
+ `       _actors :           '@cast:findnodes:./cast/person'`
+ 
+ `       cast :`
+
+The DOM context is now each successive cast member on the movie definiiton being parsed:
+
+`            name :          'getAttribute:name'`
+
+`           role :          'getAttribute:role'`
+
+As above attibute values are extracted and stored on the cast array on movie.
+
+        _info :             '@imdb-info:findnodes:./imdb-info'
+        imdb-info :
+            url :           'getAttribute:url'
+            synopsis :      'findvalue:./synopsis'
+            score :         'findvalue:./score'
+```
 
 The YAML is much more concise than writing the native Perl to do the extraction, roughly 1:3 ration spec to code.
 XML::Scraper takes that specification and actually builds the boiler plate that would otherwise be lovingly hand crafted. 
+
+## Generateed Code
+
 Here is the code it produces for the above spec:
 
 ```Perl
@@ -147,8 +219,11 @@ sub {
   },
 ```
 It may not be the slickest Perl, but it gets the job done. You never really need to see the Perl, 
-unless the parse is not quite getting the data how you want it. Here is the extracted data in Perl
-Datat::Dumper::Concise format. 
+unless the parse is not quite getting the data how you want it. 
+
+## Perl Output
+
+Here is the extracted data in Perl, coutersy of `Data::Dumper::Concise` . 
 
 ```Perl
 {
