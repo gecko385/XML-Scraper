@@ -130,7 +130,6 @@ package XML::Scraper;
 
         my $src  = "\nsub { \n";
         $src .= "    my (\$dom)  = \@_;\n";
-        $src .= "    print Data::Dumper::Concise::Dumper(\$dom);\n";
 
         keys %{$cfg} eq 1 or die "Expecting just one top level node got ". ( join ',', keys %{$cfg});
 
