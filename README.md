@@ -504,4 +504,4 @@ tests :
 ```
 # LICENSE
 
-GGPL as described in the file LICENSE in this code repository/release/package.
+ [MIT](https://opensource.org/licenses/MIT)as described in the file LICENSE in this code repository .
